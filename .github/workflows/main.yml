@@ -25,7 +25,7 @@ jobs:
           go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
           go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
           go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
-          go install -v https://github.com/zan8in/afrog/cmd/afrog@latest
+          go install -v github.com/zan8in/afrog/cmd/afrog@latest
 
       - name: Running SubFinder for passive DNS enumeration
         run: |
