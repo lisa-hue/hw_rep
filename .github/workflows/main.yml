@@ -1,0 +1,39 @@
+name: incloud
+
+on:
+    workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+
+      - name: Setup golang
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.19
+
+      - name: Setup Dependencies
+        run: sudo apt-get install libpcap-dev 
+
+      - name: Setting up ProjectDiscovery tools
+        env:
+          GO111MODULE: on
+        run: |
+          go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+          go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+          go install -v github.com/projectdiscovery/naabu/v2/cmd/naabu@latest
+          go install -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
+
+      - name: Running SubFinder for passive DNS enumeration
+        run: |
+          subfinder -dL input/domains.txt -config config/subfinder-config.yaml -o output/passive_subdomains.txt
+        shell: bash
+
+      - name: subfinder naabu httpx nuclei
+        run: subfinder -dL input/domains.txt -silent | naabu -silent -top-ports 1000 -c 50 -rate 2000 | httpx  -rl 300 -silent -fc 400,401,403,404,405,500,501,502,503 | nuclei -s medium, high, critical, unknown -o output/result.txt
+        
+      - name: cat result.txt
+        run: cat output/result.txt
