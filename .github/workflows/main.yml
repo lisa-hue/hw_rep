@@ -1,4 +1,4 @@
-name: incloud
+name: hwaction
 
 on:
     workflow_dispatch:
@@ -32,3 +32,9 @@ jobs:
         
       - name: subfinder naabu httpx
         run: afrog -T httpx.txt -o hw.html
+
+      - name: save_result
+        uses: actions/upload-artifact@v1
+        with:
+          name: result
+          path: /home/runner/work/hw_rep/hw_rep/
