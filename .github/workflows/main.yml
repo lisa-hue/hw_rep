@@ -31,4 +31,4 @@ jobs:
         run: subfinder -dL input/domains.txt -silent | naabu -silent -top-ports 1000 -c 50 -rate 2000 | httpx  -rl 300 -silent -fc 400,401,403,404,405,500,501,502,503 -o httpx.txt
         
       - name: subfinder naabu httpx
-        run: afrog -T httpx.txt -o output/hw.html
+        run: afrog -T httpx.txt -o hw.html
